@@ -25,7 +25,7 @@ class Service {
       }
     };
 
-    this.pins = [new GPIO(18, "out")];
+    this.pins = [new GPIO(this.options.pin || 18, "out")];
   }
 
   getPin(id) {
