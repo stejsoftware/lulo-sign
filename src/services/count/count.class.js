@@ -29,8 +29,8 @@ class Service {
 
     //GPIO declarations
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-    this.segmentLatch = new GPIO(this.options.LAT || 24, "out");
-    this.segmentClock = new GPIO(this.options.CLK || 25, "out");
+    this.segmentLatch = new GPIO(this.options.LAT || 25, "out");
+    this.segmentClock = new GPIO(this.options.CLK || 24, "out");
     this.segmentData = new GPIO(this.options.SER || 4, "out");
 
     this.state = {};
