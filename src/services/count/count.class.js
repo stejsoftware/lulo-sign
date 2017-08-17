@@ -32,17 +32,25 @@ class Service {
     this.segmentLatch = new GPIO(this.options.LAT || 25, "out");
     this.segmentClock = new GPIO(this.options.CLK || 24, "out");
     this.segmentData = new GPIO(this.options.SER || 4, "out");
-
+    this.digitCount = this.options.digitCount || 4;
     this.state = {};
 
-    /*
-    const test = x => {
-      this.showNumber(x);
-      if (x > 0) setTimeout(test, 1000, x - 1);
-    };
+    const segs = ["a", "b", "c", "d", "e", "g", "p", " "];
 
-    test(100);
-    */
+    const test = (x, y) => {
+      if (y < this.digitCount) {
+        const test2 = z => {
+          if (z < segs.length) {
+            this.showNumber(segs[z].padEnd(y + 1, " "));
+            setTimeout(test2, 200, z + 1);
+          } else {
+            setTimeout(test, 0, x, y + 1);
+          }
+        };
+        test2(x);
+      }
+    };
+    test(0, 0);
   }
 
   get(id, params) {
@@ -64,10 +72,13 @@ class Service {
   }
 
   //Takes a number and displays 2 numbers. Displays absolute value (no negatives)
-  showNumber(value) {
-    // Remove negative signs and any decimals
-    Math.abs(value).toString().split("").map(ch => {
-      this.postNumber(Number(ch), false);
+  showNumber(number) {
+    var digits = number.toString().padStart(this.digitCount);
+
+    console.log({ digits });
+
+    digits.split("").reverse().map(ch => {
+      this.postNumber(ch, false);
     });
 
     //Latch the current segment data
@@ -98,44 +109,63 @@ class Service {
     var segments;
 
     switch (number) {
-      case 1:
+      case "1":
         segments = b | c;
         break;
-      case 2:
+      case "2":
         segments = a | b | d | e | g;
         break;
-      case 3:
+      case "3":
         segments = a | b | c | d | g;
         break;
-      case 4:
+      case "4":
         segments = f | g | b | c;
         break;
-      case 5:
+      case "5":
         segments = a | f | g | c | d;
         break;
-      case 6:
+      case "6":
         segments = a | f | g | e | c | d;
         break;
-      case 7:
+      case "7":
         segments = a | b | c;
         break;
-      case 8:
+      case "8":
         segments = a | b | c | d | e | f | g;
         break;
-      case 9:
+      case "9":
         segments = a | b | c | d | f | g;
         break;
-      case 0:
+      case "0":
         segments = a | b | c | d | e | f;
         break;
-      case " ":
-        segments = 0;
+      case "a":
+        segments = a;
+        break;
+      case "b":
+        segments = b;
         break;
       case "c":
-        segments = g | e | d;
+        segments = c;
         break;
-      case "-":
+      case "d":
+        segments = d;
+        break;
+      case "e":
+        segments = e;
+        break;
+      case "f":
+        segments = f;
+        break;
+      case "g":
         segments = g;
+        break;
+      case "p":
+        segments = dp;
+        break;
+      case " ":
+      default:
+        segments = 0;
         break;
     }
 
@@ -146,8 +176,6 @@ class Service {
     while (bits.length < 8) {
       bits = "0" + bits;
     }
-
-    console.log({ bits });
 
     bits.split("").forEach(bit => {
       // Clock these bits out to the drivers
