@@ -35,7 +35,7 @@ class Service {
     this.digitCount = this.options.digitCount || 4;
     this.state = {};
 
-    const segs = ["a", "b", "c", "d", "e", "g", "p", " "];
+    const segs = ["a", "b", "c", "d", "e", "f", "g", "p", " "];
 
     const test = (x, y) => {
       if (y < this.digitCount) {

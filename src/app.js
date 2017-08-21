@@ -11,13 +11,42 @@ const hooks = require("feathers-hooks");
 const rest = require("feathers-rest");
 const socketio = require("feathers-socketio");
 const swagger = require("feathers-swagger");
-
 const handler = require("feathers-errors/handler");
 const notFound = require("feathers-errors/not-found");
 
 const middleware = require("./middleware");
 const services = require("./services");
 const appHooks = require("./app.hooks");
+
+const pmx = require("pmx");
+const speedTest = require("speedtest-net");
+
+var speedData = {};
+
+pmx.action("Network", reply => {
+  reply(require("os").networkInterfaces());
+});
+
+pmx.action("SpeedData", reply => {
+  reply(speedData);
+});
+
+var downloadSpeed = pmx.probe().metric({
+  name: "Net Speed",
+  value: "..."
+});
+
+setInterval(() => {
+  downloadSpeed.set(`...`);
+
+  speedTest({ maxTime: 5000 })
+    .on("downloadspeed", speed => {
+      downloadSpeed.set(`${speed.toFixed(2)} Mbps`);
+    })
+    .on("data", data => {
+      speedData = data;
+    });
+}, 5 * 60 * 1000);
 
 const app = feathers();
 
