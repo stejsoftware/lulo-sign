@@ -22,7 +22,10 @@
     "test": "npm run eslint && npm run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive"
+    "mocha": "mocha test/ --recursive",
+    "prebuild": "shx rm -rf ./public/dist",
+    "build": "webpack --progress --colors",
+    "build:watch": "webpack --watch --devtool source-map --progress --colors"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
@@ -45,9 +48,27 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "css-loader": "^0.28.5",
     "eslint": "^4.4.1",
+    "feathers-client": "^2.3.0",
+    "feathers-redux": "^0.0.3",
     "mocha": "^3.5.0",
+    "react": "^15.6.1",
+    "react-bootstrap": "^0.31.2",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-promise-middleware": "4.2.1",
+    "redux-thunk": "^2.2.0",
     "request": "^2.81.0",
-    "request-promise": "^4.2.1"
+    "request-promise": "^4.2.1",
+    "shx": "^0.2.2",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.5.5"
   }
 }
