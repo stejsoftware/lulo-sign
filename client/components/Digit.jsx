@@ -1,5 +1,4 @@
 import React from "react";
-import { Panel } from "react-bootstrap";
 
 class Digit extends React.Component {
   constructor(props) {
@@ -25,48 +24,58 @@ class Digit extends React.Component {
       "6": ["a", "f", "g", "c", "d", "e"],
       "7": ["a", "b", "c"],
       "8": ["a", "b", "c", "d", "e", "f", "g"],
-      "9": ["a", "b", "c", "d", "f", "g"]
+      "9": ["a", "b", "c", "d", "f", "g"],
+      " ": []
     };
+  }
+
+  transform(functions) {
+    return functions.reduce((funcs, func) => {
+      var name = Object.keys(func)[0];
+      var params = Array.isArray(func[name]) ? func[name] : [func[name]];
+      return `${funcs} ${name}(${params.join(" ")})`;
+    }, "");
   }
 
   render() {
     return (
-      <svg>
-        <g
-          transform={`scale(${this.props.scale})`}
-          style={{
-            fillRule: "evenodd",
-            stroke: "#fff",
-            strokeWidth: 0.25,
-            strokeOpacity: 1,
-            strokeLinecap: "butt",
-            strokeLinejoin: "miter"
-          }}
-        >
-          {Object.keys(this.segments).map(key =>
-            <polygon
-              key={key}
-              points={this.segments[key]}
-              fill="red"
-              fillOpacity={
-                this.digits[this.props.value].indexOf(key) < 0
-                  ? this.props.offOpacity
-                  : this.props.onOpacity
-              }
-            />
-          )}
-        </g>
-      </svg>
+      <g
+        transform={this.transform([
+          { translate: [this.props.x, this.props.y] }
+        ])}
+        style={{
+          fillRule: "evenodd",
+          stroke: "#fff",
+          strokeWidth: 0.25,
+          strokeOpacity: 1,
+          strokeLinecap: "butt",
+          strokeLinejoin: "miter"
+        }}
+      >
+        {Object.keys(this.segments).map(key =>
+          <polygon
+            key={key}
+            points={this.segments[key]}
+            fill={this.props.color}
+            fillOpacity={
+              this.digits[this.props.value].indexOf(key) < 0
+                ? this.props.offOpacity
+                : this.props.onOpacity
+            }
+          />
+        )}
+      </g>
     );
   }
 }
 
 Digit.defaultProps = {
-  scale: 5,
-  value: 0,
+  value: " ",
   onOpacity: 1,
-  offOpacity: 0.25,
-  color: "red"
+  offOpacity: 0.15,
+  color: "red",
+  x: 0,
+  y: 0
 };
 
 export default Digit;

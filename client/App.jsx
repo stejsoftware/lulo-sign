@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Panel } from "react-bootstrap";
-import Digit from "./components/Digit";
+import Display from "./components/Display";
 
 const mapStateToProps = state => ({
   reduxState: state
@@ -15,24 +15,31 @@ const mapDispatchToProps = (dispatch, { services }) => ({
 
 const Number = ({ data, label }) =>
   <pre>
-    <span>
-      {label || "Number"}:&nbsp;
-    </span>
-    {data && JSON.stringify(data.number, null, 2)}
+    {data && <Display value={data.number} digitCount={4} />}
   </pre>;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+
     this.props.getCount();
+    this.state = { number: 0 };
+
+    setInterval(() => {
+      this.setState({ number: this.state.number + 1 });
+    }, 1000);
   }
 
   render() {
     return (
-      <Panel header="Number">
-        {[...Array(10)].map((y, x) => <Digit value={x} />)}
-        <Number label="Count" data={this.props.reduxState.count.data} />
-      </Panel>
+      <div>
+        <Panel header="Number">
+          <Number data={this.props.reduxState.count.data} />
+        </Panel>
+        <Panel header="Counter">
+          <Display value={this.state.number} digitCount={4} color="green" />
+        </Panel>
+      </div>
     );
   }
 }
