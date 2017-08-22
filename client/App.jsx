@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Panel } from "react-bootstrap";
+import Digit from "./components/Digit";
 
 const mapStateToProps = state => ({
   reduxState: state
@@ -29,6 +30,7 @@ class App extends React.Component {
   render() {
     return (
       <Panel header="Number">
+        {[...Array(10)].map((y, x) => <Digit value={x} />)}
         <Number label="Count" data={this.props.reduxState.count.data} />
       </Panel>
     );
