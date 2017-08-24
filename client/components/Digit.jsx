@@ -24,9 +24,18 @@ class Digit extends React.Component {
       "6": ["a", "f", "g", "c", "d", "e"],
       "7": ["a", "b", "c"],
       "8": ["a", "b", "c", "d", "e", "f", "g"],
-      "9": ["a", "b", "c", "d", "f", "g"],
-      " ": []
+      "9": ["a", "b", "c", "d", "f", "g"]
     };
+  }
+
+  getSegment(id) {
+    var segment = this.segments[id];
+    return Array.isArray(segment) ? segment : [];
+  }
+
+  getDigit(id) {
+    var digit = this.digits[id];
+    return Array.isArray(digit) ? digit : [];
   }
 
   transform(functions) {
@@ -55,12 +64,12 @@ class Digit extends React.Component {
         {Object.keys(this.segments).map(key =>
           <polygon
             key={key}
-            points={this.segments[key]}
+            points={this.getSegment(key)}
             fill={this.props.color}
             fillOpacity={
-              this.digits[this.props.value].indexOf(key) < 0
-                ? this.props.offOpacity
-                : this.props.onOpacity
+              this.getDigit(this.props.value).indexOf(key) >= 0
+                ? this.props.onOpacity
+                : this.props.offOpacity
             }
           />
         )}

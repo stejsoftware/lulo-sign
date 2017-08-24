@@ -1,7 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Panel } from "react-bootstrap";
 import Display from "./components/Display";
+import Led from "./components/Led";
+import {
+  Panel,
+  ButtonToolbar,
+  Button,
+  FormControl,
+  Well,
+  Grid,
+  Row,
+  Col
+} from "react-bootstrap";
 
 const mapStateToProps = state => ({
   reduxState: state
@@ -10,34 +20,82 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, { services }) => ({
   getCount: () => {
     dispatch(services.count.get(1));
+  },
+  getLight: () => {
+    dispatch(services.light.get(1));
+  },
+  setCount: number => {
+    dispatch(services.count.update(1, { number }));
+  },
+  setLightOn: () => {
+    dispatch(services.light.update(1, { state: true }));
+  },
+  setLightOff: () => {
+    dispatch(services.light.update(1, { state: false }));
   }
 });
-
-const Number = ({ data, label }) =>
-  <pre>
-    {data && <Display value={data.number} digitCount={4} />}
-  </pre>;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+  }
 
+  componentDidMount() {
+    this.props.getLight();
     this.props.getCount();
-    this.state = { number: 0 };
-
-    setInterval(() => {
-      this.setState({ number: this.state.number + 1 });
-    }, 1000);
   }
 
   render() {
     return (
       <div>
-        <Panel header="Number">
-          <Number data={this.props.reduxState.count.data} />
+        <Panel header="Light">
+          {this.props.reduxState.sign.light &&
+            <Led
+              color="green"
+              on={this.props.reduxState.sign.light.state === "on"}
+            />}
+          <ButtonToolbar>
+            <Button onClick={this.props.setLightOn}>Turn On</Button>
+            <Button onClick={this.props.setLightOff}>Turn Off</Button>
+          </ButtonToolbar>
         </Panel>
-        <Panel header="Counter">
-          <Display value={this.state.number} digitCount={4} color="green" />
+        <Panel header="Policy Count">
+          <Well>
+            {this.props.reduxState.sign.count &&
+              <Display
+                value={this.props.reduxState.sign.count.number}
+                digitCount={4}
+              />}
+          </Well>
+          <Grid>
+            <Row>
+              <Col lg={10} md={10} sm={8} xs={8}>
+                <FormControl
+                  type="tel"
+                  style={{ width: "100%" }}
+                  size={4}
+                  inputRef={ref => {
+                    this.input = ref;
+                  }}
+                  onKeyPress={e => {
+                    if (e.key === "Enter") {
+                      this.props.setCount(this.input.value);
+                    }
+                  }}
+                />
+              </Col>
+              <Col lg={2} md={2} sm={4} xs={4}>
+                <Button
+                  style={{ width: "100%" }}
+                  onClick={e => {
+                    this.props.setCount(this.input.value);
+                  }}
+                >
+                  Set
+                </Button>
+              </Col>
+            </Row>
+          </Grid>
         </Panel>
       </div>
     );
