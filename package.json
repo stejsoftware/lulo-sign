@@ -24,8 +24,8 @@
     "start": "node src/",
     "mocha": "mocha test/ --recursive",
     "prebuild": "shx rm -rf ./public/dist",
-    "build": "webpack --progress --colors",
-    "build:watch": "webpack --watch --devtool source-map --progress --colors"
+    "build": "webpack --config webpack.prod.js --progress --colors",
+    "build:watch": "webpack --config webpack.dev.js --watch --progress --colors"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
@@ -70,6 +70,7 @@
     "request-promise": "^4.2.1",
     "shx": "^0.2.2",
     "style-loader": "^0.18.2",
-    "webpack": "^3.5.5"
+    "webpack": "^3.5.5",
+    "webpack-merge": "^4.1.0"
   }
 }

@@ -24,8 +24,16 @@ const mapDispatchToProps = (dispatch, { services }) => ({
   getLight: () => {
     dispatch(services.light.get(1));
   },
-  setCount: number => {
-    dispatch(services.count.update(1, { number }));
+  setCount: count => {
+    var number = Number.parseInt(count);
+    if (Number.isInteger(number)) {
+      dispatch(services.count.update(1, { number }));
+      return "";
+    }
+    return count;
+  },
+  clearCount: () => {
+    dispatch(services.count.update(1, { number: "" }));
   },
   setLightOn: () => {
     dispatch(services.light.update(1, { state: true }));
@@ -79,20 +87,22 @@ class App extends React.Component {
                   }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
-                      this.props.setCount(this.input.value);
+                      this.input.value = this.props.setCount(this.input.value);
                     }
                   }}
                 />
               </Col>
               <Col lg={2} md={2} sm={4} xs={4}>
-                <Button
-                  style={{ width: "100%" }}
-                  onClick={e => {
-                    this.props.setCount(this.input.value);
-                  }}
-                >
-                  Set
-                </Button>
+                <ButtonToolbar>
+                  <Button
+                    onClick={e => {
+                      this.input.value = this.props.setCount(this.input.value);
+                    }}
+                  >
+                    Set
+                  </Button>
+                  <Button onClick={this.props.clearCount}>Clear</Button>
+                </ButtonToolbar>
               </Col>
             </Row>
           </Grid>

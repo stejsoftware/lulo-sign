@@ -1,4 +1,3 @@
-const webpack = require("webpack"); // eslint-disable-line import/no-unresolved
 const path = require("path");
 
 module.exports = {
@@ -28,15 +27,6 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".jsx"],
-    alias: {
-      jsonpath: path.join(__dirname, "./node_modules/jsonpath/jsonpath.js")
-    }
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      "process.env": {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV || "development")
-      }
-    })
-  ]
+    alias: {}
+  }
 };
