@@ -1,15 +1,13 @@
 {
   "name": "lulo-sign",
   "description": "A Sign to show the current Lulo Policy count.",
-  "version": "0.1.0",
-  "homepage": "",
+  "version": "0.1.1",
   "main": "src",
-  "keywords": [
-    "feathers"
-  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stejsoftware/lulo-sign"
+  },
   "author": "Jonathan Meyer <jonathan.meyer@libertymutual.com>",
-  "contributors": [],
-  "bugs": {},
   "directories": {
     "lib": "src",
     "test": "test/"
