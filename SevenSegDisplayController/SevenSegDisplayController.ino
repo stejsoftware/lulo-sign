@@ -111,20 +111,11 @@ void loop()
 void showNumber(int32_t value)
 {
   int32_t number = value;
-
+  
   for (byte x = 0; x < DIGIT_COUNT; x++)
   {
-    int remainder = number % 10;
-
-    if ((x > 0) && (remainder == 0))
-    {
-      postNumber(' ', false);
-    }
-    else
-    {
-      postNumber(remainder, false);
-    }
-
+    byte remainder = number % 10;
+    postNumber(remainder, false);
     number /= 10;
   }
 

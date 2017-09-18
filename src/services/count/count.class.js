@@ -26,22 +26,22 @@ class Service {
       }
     };
 
-    this.port = new SerialPort('/dev/serial0', {
+    this.port = new SerialPort("/dev/serial0", {
       baudRate: 9600
     });
-    
-    this.port.on('error', function(err) {
-      console.log('Error: ', err.message);
-    })
-    
-    this.port.on('open', function() {
+
+    this.port.on("error", function(err) {
+      console.log("Error: ", err.message);
+    });
+
+    this.port.on("open", function() {
       console.log("open");
     });
-    
-    this.port.on('data', (data) => {
-         console.log('From Arduino:',data.toString());
-       });
-      
+
+    this.port.on("data", data => {
+      console.log("From Arduino:", data.toString());
+    });
+
     //GPIO declarations
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     this.digitCount = this.options.digitCount || 4;
@@ -68,7 +68,10 @@ class Service {
 
   //Takes a number and displays 2 numbers. Displays absolute value (no negatives)
   showNumber(number) {
-    var digits = number.toString().padStart(this.digitCount).substr(-this.digitCount);
+    var digits = number
+      .toString()
+      .padStart(this.digitCount)
+      .substr(-this.digitCount);
 
     console.log({ digits });
 
