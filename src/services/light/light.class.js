@@ -8,7 +8,7 @@ class Service {
     this.options = options || {};
 
     this.docs = {
-      description: "A service to control the state of the light.",
+      description: "A service to control the state of the light.",      
       definitions: {
         light: {
           type: "object",

@@ -76,8 +76,9 @@ app.configure(
     docsPath: "/docs",
     uiIndex: true,
     info: {
-      title: "A test",
-      description: "A description"
+      title: "Lulo Sign REST Service",
+      description: "This service controls the Lulo Sign.",
+      version: "1.0"
     }
   })
 );
