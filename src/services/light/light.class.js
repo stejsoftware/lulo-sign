@@ -24,7 +24,7 @@ class Service {
       }
     };
 
-    if (os.platform == "linux") {
+    if (os.platform() == "linux") {
       const GPIO = require("onoff").Gpio;
       this.pins = [new GPIO(this.options.pin || 18, "out")];
     } else {
