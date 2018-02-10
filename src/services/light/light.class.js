@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-
-const GPIO = require("onoff").Gpio;
+const os = require("os");
 const _ = require("lodash");
 
 class Service {
@@ -8,7 +7,7 @@ class Service {
     this.options = options || {};
 
     this.docs = {
-      description: "A service to control the state of the light.",      
+      description: "A service to control the state of the light.",
       definitions: {
         light: {
           type: "object",
@@ -25,7 +24,12 @@ class Service {
       }
     };
 
-    this.pins = [new GPIO(this.options.pin || 18, "out")];
+    if (os.platform == "linux") {
+      const GPIO = require("onoff").Gpio;
+      this.pins = [new GPIO(this.options.pin || 18, "out")];
+    } else {
+      this.pins = [];
+    }
   }
 
   getPin(id) {
