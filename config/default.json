@@ -5,5 +5,13 @@
   "paginate": {
     "default": 10,
     "max": 50
+  },
+  "serial-win32": {
+    "comport": "COM9",
+    "baudrate": 9600
+  },
+  "serial-linux": {
+    "comport": "/dev/serial0",
+    "baudrate": 9600
   }
 }

@@ -2,6 +2,14 @@
 const SerialPort = require("serialport");
 const _ = require("lodash");
 
+const cmd = {
+  kAcknowledge: 0,
+  kError: 1,
+  kSetCount: 2,
+  kClear: 3,
+  kTest: 4
+};
+
 const HIGH = 1;
 const LOW = 0;
 
@@ -26,8 +34,8 @@ class Service {
       }
     };
 
-    this.port = new SerialPort("/dev/serial0", {
-      baudRate: 9600
+    this.port = new SerialPort(options.serial.comport, {
+      baudRate: options.serial.baudrate
     });
 
     this.port.on("error", function(err) {
@@ -35,7 +43,7 @@ class Service {
     });
 
     this.port.on("open", function() {
-      console.log("open");
+      console.log("serial port opened:", options.serial);
     });
 
     this.port.on("data", data => {
@@ -51,14 +59,21 @@ class Service {
   get(id, params) {
     return Promise.resolve({
       id,
-      number: this.state[id] || 0
+      number: this.state[id] || -1
     });
   }
 
   update(id, data, params) {
     this.state[id] = data.number;
 
-    this.showNumber(data.number);
+    var digits = data.number
+      .toString()
+      .padStart(this.digitCount)
+      .substr(-this.digitCount);
+
+    console.log({ digits });
+
+    this.port.write(`${cmd.kSetCount},${digits};`);
 
     return Promise.resolve({
       id,
@@ -66,16 +81,24 @@ class Service {
     });
   }
 
-  //Takes a number and displays 2 numbers. Displays absolute value (no negatives)
-  showNumber(number) {
-    var digits = number
-      .toString()
-      .padStart(this.digitCount)
-      .substr(-this.digitCount);
+  remove(id, params) {
+    this.state[id] = null;
+    this.port.write(`${cmd.kClear};`);
 
-    console.log({ digits });
+    return Promise.resolve({
+      id,
+      number: this.state[id]
+    });
+  }
 
-    this.port.write(`2,${digits};`);
+  create(data, params) {
+    if (Array.isArray(data)) {
+      return Promise.all(data.map(current => this.create(current)));
+    }
+
+    this.port.write(`${data.cmd},${data.args.join(",")};`);
+
+    return Promise.resolve(data);
   }
 }
 
