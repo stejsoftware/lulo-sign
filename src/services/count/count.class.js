@@ -96,7 +96,11 @@ class Service {
       return Promise.all(data.map(current => this.create(current)));
     }
 
-    this.port.write(`${data.cmd},${data.args.join(",")};`);
+    data.text = `${data.cmd},${data.args.join(",")};`;
+
+    console.log({ data });
+
+    this.port.write(data.text);
 
     return Promise.resolve(data);
   }
