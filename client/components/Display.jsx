@@ -5,19 +5,20 @@ class Display extends React.Component {
   render() {
     return (
       <svg viewBox={[-1, -1, 12 * this.props.digitCount, 20]}>
-        {this.props.value
-          .toString()
-          .padStart(this.props.digitCount, " ")
-          .split("")
-          .slice(-this.props.digitCount)
-          .map((digit, key) =>
-            <Digit
-              key={key}
-              value={digit}
-              x={key * 12}
-              color={this.props.color}
-            />
-          )}
+        {this.props.value &&
+          this.props.value
+            .toString()
+            .padStart(this.props.digitCount, " ")
+            .split("")
+            .slice(-this.props.digitCount)
+            .map((digit, key) => (
+              <Digit
+                key={key}
+                value={digit}
+                x={key * 12}
+                color={this.props.color}
+              />
+            ))}
       </svg>
     );
   }

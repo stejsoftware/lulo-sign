@@ -6,8 +6,8 @@ const cmd = {
   kAcknowledge: 0,
   kError: 1,
   kSetCount: 2,
-  kClear: 3,
-  kTest: 4
+  kSetElement: 3,
+  kClear: 4
 };
 
 const HIGH = 1;
@@ -63,17 +63,29 @@ class Service {
     });
   }
 
-  update(id, data, params) {
-    this.state[id] = data.number;
+  update(id, { number }, params) {
+    console.log({ number });
 
-    var digits = data.number
-      .toString()
-      .padStart(this.digitCount)
-      .substr(-this.digitCount);
+    if (typeof number == "string") {
+      if (number.length > 0) {
+        number = Number(number).valueOf();
+      } else {
+        number = null;
+      }
+    }
 
-    console.log({ digits });
+    var text = "";
 
-    this.port.write(`${cmd.kSetCount},${digits};`);
+    if (number != null) {
+      text = `${cmd.kSetCount},${number};`;
+      console.log("set:", text);
+    } else {
+      text = `${cmd.kClear};`;
+      console.log("clear:", text);
+    }
+
+    this.state[id] = number;
+    this.port.write(text);
 
     return Promise.resolve({
       id,
