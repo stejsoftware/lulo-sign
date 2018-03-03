@@ -40,6 +40,7 @@
     "feathers-swagger": "^0.5.0",
     "helmet": "^3.8.1",
     "lodash": "^4.17.4",
+    "my-ip": "^1.1.1",
     "onoff": "^1.1.5",
     "pmx": "^1.2.0",
     "serialport": "^6.0.5",

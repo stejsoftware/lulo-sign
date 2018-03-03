@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const SerialPort = require("serialport");
 const _ = require("lodash");
+const myIP = require("my-ip");
 
 const cmd = {
   kAcknowledge: 0,
@@ -54,9 +55,28 @@ class Service {
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     this.digitCount = this.options.digitCount || 4;
     this.state = {};
+
+    this.showIp = 0;
+    this.ip = [...myIP().split("."), ""];
+
+    console.log({ ip: this.ip });
+
+    this.showIpTimer = setInterval(this.displayIp.bind(this), 1750);
+  }
+
+  displayIp() {
+    if (this.ip[this.showIp].length > 0) {
+      this.port.write(`${cmd.kSetCount},${this.ip[this.showIp]};`);
+    } else {
+      this.port.write(`${cmd.kClear};`);
+    }
+
+    this.showIp = (this.showIp + 1) % this.ip.length;
   }
 
   get(id, params) {
+    clearInterval(this.showIpTimer);
+
     return Promise.resolve({
       id,
       number: this.state[id] || -1
@@ -64,6 +84,8 @@ class Service {
   }
 
   update(id, { number }, params) {
+    clearInterval(this.showIpTimer);
+
     console.log({ number });
 
     if (typeof number == "string") {
@@ -94,6 +116,8 @@ class Service {
   }
 
   remove(id, params) {
+    clearInterval(this.showIpTimer);
+
     this.state[id] = null;
     this.port.write(`${cmd.kClear};`);
 
@@ -104,6 +128,8 @@ class Service {
   }
 
   create(data, params) {
+    clearInterval(this.showIpTimer);
+
     if (Array.isArray(data)) {
       return Promise.all(data.map(current => this.create(current)));
     }
